@@ -29,14 +29,38 @@ class CoffeeVendingMachine(vm.VendingMachine):
         self.sugar = 0
 
     def set_cream(self, count):
-        print("Not Implemented!")
+        if self.balance < self.item_price:
+            print("Please insert sufficient funds first.")
+            return
+        
+        if 0 <= count <= 2:
+            self.cream = count
+            print(f"Cream level set to {count}.")
+        else:
+            print("Invalid cream amount. Must be between 0 and 2.")
 
     def set_sugar(self, count):
-        print("Not implemented!")
+        if self.balance < self.item_price:
+            print("Please insert sufficient funds first.")
+            return
+        
+        if 0 <= count <= 2:
+            self.sugar = count
+            print(f"Sugar level set to {count}.")
+        else:
+            print("Invalid sugar amount. Must be between 0 and 2.")
 
     def set_strength(self, count):
-        print("Not implemented!")
-
+        if self.balance < self.item_price:
+            print("Please insert sufficient funds first.")
+            return
+        
+        if 1 <= count <= 3:
+            self.strength = count
+            print(f"Strength set to {count}.")
+        else:
+            print("Invalid strength. Must be between 1 and 3.")
+            
     def purchase(self):
         if super().purchase():
             print("Brewing...", end = "")
@@ -44,7 +68,9 @@ class CoffeeVendingMachine(vm.VendingMachine):
                 print(".",end='',flush=True)
                 time.sleep(0.5)
             print(f"\nCup of coffee with Strength: {self.strength}, Cream: {self.cream}, and Sugar: {self.sugar} is complete. Enjoy!")
-            # reset the defaults
+            self.cream = 0
+            self.sugar = 0
+            self.strength = 3
         else:
             print("Unable to purchase, please come back later!")
 
@@ -79,4 +105,6 @@ class CoffeeVendingMachine(vm.VendingMachine):
             elif option == 7:
                 break
         
-
+if __name__ == '__main__':        
+    coffee = CoffeeVendingMachine("strong coffee here", 1.0, 5)
+    coffee.menu()
