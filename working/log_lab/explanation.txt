@@ -1,0 +1,47 @@
+This failure was a "cascading collapse" where a minor hardware issue on one machine eventually caused a logic failure on the second and a mechanical failure on the third.
+
+Here is the chronological breakdown of how these three machines interacted and eventually failed.
+
+Phase 1: The Thermal Bottleneck
+Time: 19:05:40 – 19:08:12
+
+The Event: Robot-B (Welder) began to overheat, reaching 88°C.
+
+The Correlation: Robot-B issued a BUSY_HOLD signal.
+
+The Impact: * Robot-A stopped mid-cycle and entered a WAIT_STATE.
+
+Robot-C (Vision) went into STANDBY_MODE.
+
+Insight: This wasn't a "failure" yet, but it put mechanical stress on Robot-A, which had to hold a heavy part in its gripper for nearly three minutes.
+
+Phase 2: The Warning Signs (Vibration & Slip)
+Time: 19:14:02 – 19:17:12
+
+The Event: Robot-A began experiencing high-frequency vibrations in Axis 3.
+
+The Correlation: * Robot-A logged a vibration of 1.5mm/s and slowed down to compensate.
+
+Robot-C confirmed this at 19:14:03, logging "Motion blur detected" and adjusting its exposure to try and keep up with the shaking part.
+
+By 19:17:11, Robot-A’s vacuum gripper began to lose pressure because the vibration was causing the part to shift.
+
+Insight: Robot-C flagged a "Marginal Pass" for Part 8828-X, proving the alignment was drifting before the total failure.
+
+Phase 3: The Fatal Chain Reaction
+Time: 19:18:21 – 19:18:23 The logs show a 2-second total system collapse involving all three units:
+
+Detection (Robot-C @ 19:18:21): The Vision system sees Part 8829-X is severely misaligned (+2.10mm). It tries to reject it, but the Reject Gate fails (REJECT_FAILURE). The bad part stays on the belt.
+
+Mechanical Failure (Robot-A @ 19:18:22): Because the part was misaligned and shaking, the vacuum seal finally broke. Robot-A logs VACUUM_LOSS and PART_DROPPED.
+
+The Logic Gap (Robot-B @ 19:18:22): Robot-B was expecting a part, but its sensors found nothing (SENSOR_MISS). Simultaneously, it received an error signal from Robot-A.
+
+The Halt (All @ 19:18:23): Robot-A issued a global EMER_STOP. All three machines entered a FATAL state and locked their axes for safety.
+
+Root Cause Summary
+Failure Layer	Primary Issue
+Root Cause	Robot-A Axis 3 Vibration: This caused the initial misalignment and vacuum instability.
+Secondary Failure	Robot-C Reject Gate: If the gate had worked, the bad part would have been tossed, and the line might have kept running.
+Result	Safety Interlock: The system performed exactly as programmed by shutting down when the "Digital Twin" of the part's location no longer matched reality.
+Would you like me to write a formal "Maintenance Ticket" based on these findings to document the repair requirements?

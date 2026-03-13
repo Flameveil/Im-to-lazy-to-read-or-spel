@@ -6,9 +6,14 @@ def get_weather_by_city(city, state):
     # We combine city and state in the 'name' parameter for better accuracy
 
     geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&admin1={state}&count=1&language=en&format=json"
-    print(geo_url)
+    geo_params = {
+        "name": city,
+        "count": 10,
+        "language": "en",
+        "format": "json"
+    }
 
-    geo_response = requests.get(geo_url)
+    geo_response = requests.get(geo_url, params=geo_params)
     geo_data = geo_response.json()
 
 
@@ -16,18 +21,28 @@ def get_weather_by_city(city, state):
         print(f"Error: Could not find location '{city} {state}'")
         return
 
+    result = None
+    for loc in geo_data["results"]:
+        # Check if state name or abbreviation matches (e.g., "Tennessee" or "TN")
+        # .get('admin1', '') safely gets the state name
+        if state.lower() in loc.get('admin1', '').lower():
+            result = loc
+            break
+
     # Extract coordinates and location details
-    result = geo_data["results"][0]
+    if not result:
+        result = geo_data["results"][0]
     lat = result["latitude"]
     lon = result["longitude"]
-    get_forcast(city_name, state_name, lat, lon)
+    get_forecast(city_name, state_name, lat, lon)
 
-def get_forcast(city, state, lat, lon):
+def get_forecast(city, state, lat, lon):
     req = {
         "latitude": lat,
         "longitude": lon,
         "daily": ["temperature_2m_max", "temperature_2m_min"], # Request daily variables
         "temperature_unit": "fahrenheit",
+        "current_weather" : "true",
         "timezone": "auto" # Best practice: adjusts 'today' and 'tomorrow' to local time
     }
 
@@ -54,3 +69,4 @@ if __name__ == "__main__":
         get_weather_by_city(city_name, state_name)
     except Exception as e:
         print(e)
+

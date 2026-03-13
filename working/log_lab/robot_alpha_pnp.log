@@ -1,0 +1,22 @@
+[2026-02-10 18:30:01] INFO  - System Boot: Kernel v4.2.1-b Stable.
+[2026-02-10 18:30:05] INFO  - Handshake established with Downstream_Sync (Robot-B).
+[2026-02-10 18:31:00] INFO  - Task started: Sub-Assembly-Seq_992.
+[2026-02-10 18:45:12] INFO  - Cycle 100 complete.
+[2026-02-10 18:58:30] WARN  - Axis_3 vibration threshold: 0.9mm/s (Normal: <0.5).
+[2026-02-10 19:02:15] INFO  - Cycle 200 complete.
+[2026-02-10 19:05:44] WARN  - Downstream_Delay: Robot-B reporting high thermal load.
+[2026-02-10 19:05:45] INFO  - Entering WAIT_STATE. Holding part in Gripper_1.
+[2026-02-10 19:08:12] INFO  - Resuming operation. Downstream_Ready received.
+[2026-02-10 19:10:01] INFO  - Cycle 300 complete.
+[2026-02-10 19:12:40] INFO  - Cycle 450 complete. Avg cycle time: 1.2s.
+[2026-02-10 19:14:02] WARN  - Axis_3 vibration exceeds threshold: 1.2mm/s.
+[2026-02-10 19:14:55] WARN  - Axis_3 vibration elevated: 1.5mm/s. Adjusting velocity profile.
+[2026-02-10 19:15:10] INFO  - Velocity reduced to 85% for stability.
+[2026-02-10 19:16:33] INFO  - Cycle 500 complete.
+[2026-02-10 19:17:11] WARN  - Gripper_2 pressure fluctuation detected: -0.2 bar.
+[2026-02-10 19:18:05] INFO  - Cycle 515 complete.
+[2026-02-10 19:18:22] ERROR - VACUUM_LOSS: Gripper_2 lost suction during transit.
+[2026-02-10 19:18:22] ERROR - PART_DROPPED: Component ID: 8829-X.
+[2026-02-10 19:18:22] INFO  - Broadcasting STOP_LINE signal to Downstream_Sync.
+[2026-02-10 19:18:23] FATAL - EMER_STOP: External trigger received. System Locked.
+[2026-02-10 19:18:25] DEBUG - Dumping registers to /logs/crash_dump_0210.bin.
