@@ -1,21 +1,15 @@
 # first install requests -> pip install requests
+import json
+
 import requests
 
 def get_weather_by_city(city, state):
     # 1. Geocoding API: Convert City/State to Coordinates
     # We combine city and state in the 'name' parameter for better accuracy
 
-    geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&admin1={state}&count=1&language=en&format=json"
-    geo_params = {
-        "name": city,
-        "count": 10,
-        "language": "en",
-        "format": "json"
-    }
-
-    geo_response = requests.get(geo_url, params=geo_params)
+    geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&admin1={state}&count=10&language=en&format=json"
+    geo_response = requests.get(geo_url)
     geo_data = geo_response.json()
-
 
     if "results" not in geo_data:
         print(f"Error: Could not find location '{city} {state}'")
@@ -25,12 +19,15 @@ def get_weather_by_city(city, state):
     for loc in geo_data["results"]:
         # Check if state name or abbreviation matches (e.g., "Tennessee" or "TN")
         # .get('admin1', '') safely gets the state name
-        if state.lower() in loc.get('admin1', '').lower():
+
+        print(loc.get('name','').lower(),',', loc.get('admin1','').lower())
+        if state.lower() in loc.get('admin1', '').lower() and city.lower() in loc.get('name', '').lower():
             result = loc
             break
 
     # Extract coordinates and location details
     if not result:
+        print(f"Error: Could not find location '{city} {state}'")
         result = geo_data["results"][0]
     lat = result["latitude"]
     lon = result["longitude"]
